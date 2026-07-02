@@ -68,7 +68,7 @@ func (c RGB) Monochromatic() []RGB {
 	steps := 5
 	for i := 0; i < steps; i++ {
 		l := float64(i) / float64(steps-1) // 0 to 1
-		l = 10 + l*80                       // 10% to 90%
+		l = 10 + l*80                      // 10% to 90%
 		palette = append(palette, HSL{H: hsl.H, S: hsl.S, L: l}.ToRGB())
 	}
 	return palette

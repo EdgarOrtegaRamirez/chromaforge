@@ -10,9 +10,9 @@ func TestComplementary(t *testing.T) {
 		input RGB
 		want  RGB
 	}{
-		{RGB{255, 0, 0}, RGB{0, 255, 255}},   // Red -> Cyan
-		{RGB{0, 255, 0}, RGB{255, 0, 255}},   // Green -> Magenta
-		{RGB{0, 0, 255}, RGB{255, 255, 0}},   // Blue -> Yellow
+		{RGB{255, 0, 0}, RGB{0, 255, 255}}, // Red -> Cyan
+		{RGB{0, 255, 0}, RGB{255, 0, 255}}, // Green -> Magenta
+		{RGB{0, 0, 255}, RGB{255, 255, 0}}, // Blue -> Yellow
 	}
 
 	for _, tt := range tests {

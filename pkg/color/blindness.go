@@ -4,24 +4,24 @@ package color
 type ColorBlindnessType int
 
 const (
-	Protanopia   ColorBlindnessType = iota // Red-blind
-	Deuteranopia                           // Green-blind
-	Tritanopia                             // Blue-blind
-	Achromatopsia                          // Total color blindness
-	Protanomaly                            // Red-weak
-	Deuteranomaly                          // Green-weak
-	Tritanomaly                            // Blue-weak
+	Protanopia    ColorBlindnessType = iota // Red-blind
+	Deuteranopia                            // Green-blind
+	Tritanopia                              // Blue-blind
+	Achromatopsia                           // Total color blindness
+	Protanomaly                             // Red-weak
+	Deuteranomaly                           // Green-weak
+	Tritanomaly                             // Blue-weak
 )
 
 // ColorBlindnessNames maps types to human-readable names.
 var ColorBlindnessNames = map[ColorBlindnessType]string{
-	Protanopia:   "Protanopia (red-blind)",
-	Deuteranopia: "Deuteranopia (green-blind)",
-	Tritanopia:   "Tritanopia (blue-blind)",
+	Protanopia:    "Protanopia (red-blind)",
+	Deuteranopia:  "Deuteranopia (green-blind)",
+	Tritanopia:    "Tritanopia (blue-blind)",
 	Achromatopsia: "Achromatopsia (total color blindness)",
-	Protanomaly:  "Protanomaly (red-weak)",
+	Protanomaly:   "Protanomaly (red-weak)",
 	Deuteranomaly: "Deuteranomaly (green-weak)",
-	Tritanomaly:  "Tritanomaly (blue-weak)",
+	Tritanomaly:   "Tritanomaly (blue-weak)",
 }
 
 // SimulateColorBlindness simulates how a color appears to someone
