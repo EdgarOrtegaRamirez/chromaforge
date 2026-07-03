@@ -1,5 +1,5 @@
 # Binaries
-chromaforge
+/chromaforge
 *.exe
 *.exe~
 *.dll
