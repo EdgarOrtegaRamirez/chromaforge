@@ -150,3 +150,106 @@ func TestLabRoundTrip(t *testing.T) {
 		}
 	}
 }
+
+func TestHSVToRGB(t *testing.T) {
+	tests := []struct {
+		input HSV
+		want  RGB
+	}{
+		{HSV{0, 100, 100}, RGB{255, 0, 0}},
+		{HSV{120, 100, 100}, RGB{0, 255, 0}},
+		{HSV{240, 100, 100}, RGB{0, 0, 255}},
+		{HSV{0, 0, 0}, RGB{0, 0, 0}},
+		{HSV{0, 0, 100}, RGB{255, 255, 255}},
+		{HSV{60, 100, 100}, RGB{255, 255, 0}}, // yellow
+		{HSV{180, 100, 100}, RGB{0, 255, 255}}, // cyan
+		{HSV{300, 100, 100}, RGB{255, 0, 255}}, // magenta
+	}
+
+	for _, tt := range tests {
+		got := tt.input.ToRGB()
+		if got != tt.want {
+			t.Errorf("HSV(%.0f,%.0f,%.0f).ToRGB() = %v, want %v",
+				tt.input.H, tt.input.S, tt.input.V, got, tt.want)
+		}
+	}
+}
+
+func TestCMYKToRGB(t *testing.T) {
+	tests := []struct {
+		input CMYK
+		want  RGB
+	}{
+		{CMYK{0, 100, 100, 0}, RGB{255, 0, 0}},
+		{CMYK{100, 0, 100, 0}, RGB{0, 255, 0}},
+		{CMYK{100, 100, 0, 0}, RGB{0, 0, 255}},
+		{CMYK{0, 0, 0, 100}, RGB{0, 0, 0}},
+		{CMYK{0, 0, 0, 0}, RGB{255, 255, 255}},
+	}
+
+	for _, tt := range tests {
+		got := tt.input.ToRGB()
+		if got != tt.want {
+			t.Errorf("CMYK(%.0f,%.0f,%.0f,%.0f).ToRGB() = %v, want %v",
+				tt.input.C, tt.input.M, tt.input.Y, tt.input.K, got, tt.want)
+		}
+	}
+}
+
+func TestXYZToRGB(t *testing.T) {
+	// D65 white point
+	white := XYZ{X: 0.95047, Y: 1.0, Z: 1.08883}
+	got := white.ToRGB()
+	if got != (RGB{255, 255, 255}) {
+		t.Errorf("D65 white XYZ -> RGB = %v, want {255,255,255}", got)
+	}
+}
+
+func TestCIEDE2000(t *testing.T) {
+	white := RGB{255, 255, 255}.ToLab()
+	black := RGB{0, 0, 0}.ToLab()
+
+	// White and black should have maximum difference
+	diff := white.CIEDE2000(black)
+	if diff < 90 || diff > 100 {
+		t.Errorf("White/Black CIEDE2000 = %.2f, want ~95", diff)
+	}
+
+	// Same color should have 0 difference
+	same := RGB{128, 64, 192}.ToLab()
+	diff = same.CIEDE2000(same)
+	if diff > 0.01 {
+		t.Errorf("Same color CIEDE2000 = %.4f, want 0", diff)
+	}
+
+	// Red and green should be different
+	red := RGB{255, 0, 0}.ToLab()
+	green := RGB{0, 255, 0}.ToLab()
+	diff = red.CIEDE2000(green)
+	if diff < 50 {
+		t.Errorf("Red/Green CIEDE2000 = %.2f, want >50", diff)
+	}
+}
+
+func TestClampf(t *testing.T) {
+	tests := []struct {
+		input  float64
+		expect float64
+	}{
+		{-1.0, 0.0},
+		{-0.5, 0.0},
+		{0.0, 0.0},
+		{0.5, 0.5},
+		{1.0, 1.0},
+		{1.5, 1.0},
+		{100.0, 1.0},
+		{-100.0, 0.0},
+	}
+
+	for _, tt := range tests {
+		got := Clampf(tt.input)
+		if math.Abs(got-tt.expect) > 0.001 {
+			t.Errorf("Clampf(%.2f) = %.2f, want %.2f", tt.input, got, tt.expect)
+		}
+	}
+}

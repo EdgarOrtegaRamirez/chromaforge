@@ -121,3 +121,41 @@ func TestIsLight(t *testing.T) {
 		t.Error("Light gray should be light")
 	}
 }
+
+func TestIsAccessibleLarge(t *testing.T) {
+	black := RGB{0, 0, 0}
+	white := RGB{255, 255, 255}
+	gray := RGB{128, 128, 128}
+
+	// Black/white should pass large text
+	if !IsAccessibleLarge(black, white) {
+		t.Error("Black/white should be accessible for large text")
+	}
+	// Same color should fail
+	if IsAccessibleLarge(gray, gray) {
+		t.Error("Same color should not be accessible")
+	}
+	// Low contrast should fail
+	lowContrast := RGB{200, 200, 200}
+	if IsAccessibleLarge(gray, lowContrast) {
+		t.Error("Low contrast should not be accessible for large text")
+	}
+}
+
+func TestLuminance(t *testing.T) {
+	black := RGB{0, 0, 0}
+	white := RGB{255, 255, 255}
+	red := RGB{255, 0, 0}
+
+	if black.Luminance() != 0 {
+		t.Errorf("Black luminance = %.4f, want 0", black.Luminance())
+	}
+	if math.Abs(white.Luminance()-1.0) > 0.001 {
+		t.Errorf("White luminance = %.4f, want 1.0", white.Luminance())
+	}
+	// Red: 0.299*255/255 = 0.299
+	wantRed := 0.299
+	if math.Abs(red.Luminance()-wantRed) > 0.01 {
+		t.Errorf("Red luminance = %.4f, want %.4f", red.Luminance(), wantRed)
+	}
+}
