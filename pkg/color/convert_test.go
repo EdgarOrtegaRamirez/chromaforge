@@ -211,8 +211,8 @@ func TestCIEDE2000(t *testing.T) {
 
 	// White and black should have maximum difference
 	diff := white.CIEDE2000(black)
-	if diff < 90 || diff > 100 {
-		t.Errorf("White/Black CIEDE2000 = %.2f, want ~95", diff)
+	if diff < 99 || diff > 100.01 {
+		t.Errorf("White/Black CIEDE2000 = %.2f, want ~100", diff)
 	}
 
 	// Same color should have 0 difference
